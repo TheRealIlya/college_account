@@ -25,7 +25,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,7 +48,7 @@ class GradeJsonControllerTest {
     }
 
     @Test
-    void getAllGradesExpectStatusOk() throws Exception {
+    void getAllGradesTest() throws Exception {
         Grade grade1 = new Grade();
         grade1.setId(1);
         Grade grade2 = new Grade();
@@ -58,8 +57,8 @@ class GradeJsonControllerTest {
         grade3.setId(3);
         List<Grade> grades = new ArrayList<>(List.of(grade1, grade2, grade3));
         when(service.getAllGrades()).thenReturn(grades);
-        mockMvc.perform(get("/rest/grades").contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
+        mockMvc.perform(get("/rest/grades")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[1].id").value(2))
@@ -67,7 +66,7 @@ class GradeJsonControllerTest {
     }
 
     @Test
-    void createGradeExpectStatusOk() throws Exception {
+    void createGradeTest() throws Exception {
         GradeDtoRequest gradeDtoRequest = new GradeDtoRequest();
         gradeDtoRequest.setValue(5);
         Grade grade = gradeDtoMapper.mapDtoToModel(gradeDtoRequest);
@@ -77,7 +76,6 @@ class GradeJsonControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.value").value(5));
     }
@@ -94,7 +92,6 @@ class GradeJsonControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -110,7 +107,6 @@ class GradeJsonControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(3))
                 .andExpect(jsonPath("$.value").value(5));
@@ -122,7 +118,6 @@ class GradeJsonControllerTest {
         when(service.removeGrade(wrongId)).thenThrow(ServiceException.class);
         mockMvc.perform(delete("/rest/grades/4")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -134,8 +129,7 @@ class GradeJsonControllerTest {
         grade.setValue(4);
         when(service.removeGrade(2)).thenReturn(grade);
         mockMvc.perform(delete("/rest/grades/2")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(2))
                 .andExpect(jsonPath("$.value").value(4));
