@@ -50,7 +50,7 @@ public class PersonJsonController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PersonDtoResponse> updatePerson(@Valid @RequestBody PersonDtoRequest personDtoRequest,
-                                                          @PathVariable @Min(1) int id) {
+                                                          @PathVariable @NotNull String id) {
         Person person = personDtoMapper.mapDtoToModel(personDtoRequest);
         return ResponseEntity.ok(personDtoMapper.mapModelToDto(service.updatePerson(person, id)));
     }

@@ -12,7 +12,7 @@ import java.util.Map;
 @Setter
 public class PersonDtoRequest {
 
-    private Integer id;
+    private String id;
     @NotNull
     private String login;
     private String password;

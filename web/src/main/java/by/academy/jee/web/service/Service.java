@@ -13,12 +13,10 @@ import by.academy.jee.model.person.Student;
 import by.academy.jee.model.theme.Theme;
 import by.academy.jee.web.util.PasswordHasher;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @org.springframework.stereotype.Service
-@Transactional
 @RequiredArgsConstructor
 public class Service {
 
@@ -42,8 +40,8 @@ public class Service {
         return personDao.findByLogin(login).orElseThrow(NotFoundException::new);
     }
 
-    public Person updatePerson(Person newPerson, int id) {
-        if (newPerson != null && newPerson.getId() == id) {
+    public Person updatePerson(Person newPerson, String id) {
+        if (newPerson != null && id.equals(newPerson.getId())) {
             encryptPasswordForPerson(newPerson);
             return personDao.save(newPerson);
         }
@@ -67,14 +65,14 @@ public class Service {
         return gradeDao.save(grade);
     }
 
-    public Grade updateGrade(Grade grade, int id) {
-        if (grade != null && grade.getId() == id) {
+    public Grade updateGrade(Grade grade, String id) {
+        if (grade != null && id.equals(grade.getId())) {
             return gradeDao.save(grade);
         }
         throw new ServiceException(BAD_REQUEST_UPDATE_GRADE);
     }
 
-    public Grade removeGrade(int id) {
+    public Grade removeGrade(String id) {
         Grade grade = gradeDao.findById(id).orElseThrow(ServiceException::new);
         gradeDao.delete(grade);
         return grade;
@@ -92,21 +90,25 @@ public class Service {
         return groupDao.save(group);
     }
 
-    public Group updateGroup(Group newGroup, int id) {
-        if (newGroup != null && newGroup.getId() == id) {
+    public Group updateGroup(Group newGroup, String id) {
+        if (newGroup != null && id.equals(newGroup.getId())) {
             return groupDao.save(newGroup);
         }
         throw new ServiceException(BAD_REQUEST_UPDATE_GROUP);
     }
 
     public Group removeGroup(Group group) {
-        for (Grade grade : group.getGrades()) {
-            gradeDao.delete(grade);
+        if (group.getGrades() != null) {
+            for (Grade grade : group.getGrades()) {
+                gradeDao.delete(grade);
+            }
+            group.setGrades(null);
         }
-        group.setGrades(null);
-        for (Student student : group.getStudents()) {
-            student.getGroups().remove(group);
-            personDao.save(student);
+        if (group.getStudents() != null) {
+            for (Student student : group.getStudents()) {
+                student.getGroups().remove(group);
+                personDao.save(student);
+            }
         }
         groupDao.save(group);
         groupDao.delete(group);
@@ -125,8 +127,8 @@ public class Service {
         return themeDao.save(theme);
     }
 
-    public Theme updateTheme(Theme newTheme, int id) {
-        if (newTheme != null && newTheme.getId() == id) {
+    public Theme updateTheme(Theme newTheme, String id) {
+        if (newTheme != null && id.equals(newTheme.getId())) {
             return themeDao.save(newTheme);
         }
         throw new ServiceException(BAD_REQUEST_UPDATE_THEME);

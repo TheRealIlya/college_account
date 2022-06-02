@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class PersonDtoResponse {
 
-    private Integer id;
+    private String id;
     private String login;
     private String name;
     @JsonBackReference

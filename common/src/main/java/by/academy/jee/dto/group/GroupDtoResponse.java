@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class GroupDtoResponse {
 
-    private Integer id;
+    private String id;
     private String title;
     private TeacherDtoResponse teacher;
 }

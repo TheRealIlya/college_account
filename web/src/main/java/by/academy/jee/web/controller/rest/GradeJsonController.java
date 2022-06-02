@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -43,13 +44,13 @@ public class GradeJsonController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<GradeDtoResponse> updateGrade(@Valid @RequestBody GradeDtoRequest gradeDtoRequest,
-                                                        @PathVariable @Min(1) int id) {
+                                                        @PathVariable @NotNull String id) {
         Grade grade = gradeDtoMapper.mapDtoToModel(gradeDtoRequest);
         return ResponseEntity.ok(gradeDtoMapper.mapModelToDto(service.updateGrade(grade, id)));
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<GradeDtoResponse> deleteGrade(@PathVariable @Min(1) int id) {
+    public ResponseEntity<GradeDtoResponse> deleteGrade(@PathVariable @NotNull String id) {
         return ResponseEntity.ok(gradeDtoMapper.mapModelToDto(service.removeGrade(id)));
     }
 }

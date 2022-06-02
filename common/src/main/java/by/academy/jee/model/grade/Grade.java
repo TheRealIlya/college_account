@@ -4,41 +4,18 @@ import by.academy.jee.model.AbstractEntity;
 import by.academy.jee.model.group.Group;
 import by.academy.jee.model.person.Student;
 import by.academy.jee.model.theme.Theme;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@Entity
+@Document(collection = "grade")
 public class Grade extends AbstractEntity {
 
     private int value;
-
-    @Fetch(FetchMode.JOIN)
-    @ManyToOne
-    @EqualsAndHashCode.Exclude
-    @JoinColumn(name = "student_id")
     private Student student;
-
-    @Fetch(FetchMode.JOIN)
-    @ManyToOne
-    @EqualsAndHashCode.Exclude
-    @JoinColumn(name = "group_id")
     private Group group;
-
-    @Fetch(FetchMode.JOIN)
-    @ManyToOne
-    @EqualsAndHashCode.Exclude
-    @JoinColumn(name = "theme_id")
     private Theme theme;
 
     @Override

@@ -49,7 +49,7 @@ public class GroupJsonController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<GroupDtoResponse> updateGroup(@Valid @RequestBody GroupDtoRequest groupDtoRequest,
-                                                        @PathVariable @Min(1) int id) {
+                                                        @PathVariable @NotNull String id) {
         Group group = groupDtoMapper.mapDtoToModel(groupDtoRequest);
         return ResponseEntity.ok(groupDtoMapper.mapModelToDto(service.updateGroup(group, id)));
     }

@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 public class GroupDtoRequest {
 
-    private Integer id;
+    private String id;
     @NotNull
     private String title;
     private PersonDtoRequest teacher;

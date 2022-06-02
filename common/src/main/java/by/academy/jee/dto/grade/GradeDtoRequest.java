@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class GradeDtoRequest {
 
-    private Integer id;
+    private String id;
     @NotNull
     private int value;
     private PersonDtoRequest student;

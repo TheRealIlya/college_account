@@ -50,7 +50,7 @@ public class ThemeJsonController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<ThemeDtoResponse> updateTheme(@Valid @RequestBody ThemeDtoRequest themeDtoRequest,
-                                                        @PathVariable @Min(1) int id) {
+                                                        @PathVariable @NotNull String id) {
         Theme theme = themeDtoMapper.mapDtoToModel(themeDtoRequest);
         return ResponseEntity.ok(themeDtoMapper.mapModelToDto(service.updateTheme(theme, id)));
     }

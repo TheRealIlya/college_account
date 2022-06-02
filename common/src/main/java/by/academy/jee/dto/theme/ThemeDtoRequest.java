@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 public class ThemeDtoRequest {
 
-    private Integer id;
+    private String id;
     @NotNull
     private String title;
     private List<GroupDtoRequest> groups;

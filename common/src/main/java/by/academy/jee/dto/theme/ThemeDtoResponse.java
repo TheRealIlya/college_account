@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class ThemeDtoResponse {
 
-    private Integer id;
+    private String id;
     private String title;
 }
