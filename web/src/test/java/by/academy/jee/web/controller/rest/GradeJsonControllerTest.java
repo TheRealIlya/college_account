@@ -1,11 +1,11 @@
 package by.academy.jee.web.controller.rest;
 
-import by.academy.jee.dto.grade.GradeDtoRequest;
+import by.academy.jee.web.dto.grade.GradeDtoRequest;
 import by.academy.jee.exception.ServiceException;
-import by.academy.jee.mapper.GradeDtoMapper;
+import by.academy.jee.web.mapper.GradeDtoMapper;
 import by.academy.jee.model.grade.Grade;
 import by.academy.jee.web.handler.ControllerExceptionHandler;
-import by.academy.jee.web.service.Service;
+import by.academy.jee.service.facade.CollegeFacade;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -31,13 +31,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class GradeJsonControllerTest {
 
     private static MockMvc mockMvc;
-    private static final Service service = mock(Service.class);
+    private static final CollegeFacade collegeFacade = mock(CollegeFacade.class);
     private static final GradeDtoMapper gradeDtoMapper = Mappers.getMapper(GradeDtoMapper.class);
 
     @BeforeAll
     static void initMockMvc() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new GradeJsonController(service, gradeDtoMapper))
+                .standaloneSetup(new GradeJsonController(collegeFacade, gradeDtoMapper))
                 .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
     }
@@ -56,7 +56,7 @@ class GradeJsonControllerTest {
         Grade grade3 = new Grade();
         grade3.setId(3);
         List<Grade> grades = new ArrayList<>(List.of(grade1, grade2, grade3));
-        when(service.getAllGrades()).thenReturn(grades);
+        when(collegeFacade.getAllGrades()).thenReturn(grades);
         mockMvc.perform(get("/rest/grades")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -70,7 +70,7 @@ class GradeJsonControllerTest {
         GradeDtoRequest gradeDtoRequest = new GradeDtoRequest();
         gradeDtoRequest.setValue(5);
         Grade grade = gradeDtoMapper.mapDtoToModel(gradeDtoRequest);
-        when(service.createGrade(grade)).thenReturn(grade);
+        when(collegeFacade.createGrade(grade)).thenReturn(grade);
         mockMvc.perform(post("/rest/grades")
                         .content(new ObjectMapper().writeValueAsString(gradeDtoRequest))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -86,7 +86,7 @@ class GradeJsonControllerTest {
         gradeDtoRequest.setId(3);
         gradeDtoRequest.setValue(5);
         Grade grade = gradeDtoMapper.mapDtoToModel(gradeDtoRequest);
-        when(service.updateGrade(grade, 2)).thenThrow(ServiceException.class);
+        when(collegeFacade.updateGrade(grade, 2)).thenThrow(ServiceException.class);
         mockMvc.perform(put("/rest/grades/2")
                         .content(new ObjectMapper().writeValueAsString(gradeDtoRequest))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -101,7 +101,7 @@ class GradeJsonControllerTest {
         gradeDtoRequest.setId(3);
         gradeDtoRequest.setValue(5);
         Grade grade = gradeDtoMapper.mapDtoToModel(gradeDtoRequest);
-        when(service.updateGrade(grade, 3)).thenReturn(grade);
+        when(collegeFacade.updateGrade(grade, 3)).thenReturn(grade);
         mockMvc.perform(put("/rest/grades/3")
                         .content(new ObjectMapper().writeValueAsString(gradeDtoRequest))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -115,7 +115,7 @@ class GradeJsonControllerTest {
     @Test
     void deleteGradeWhenIdIsNotExist() throws Exception {
         int wrongId = 4;
-        when(service.removeGrade(wrongId)).thenThrow(ServiceException.class);
+        when(collegeFacade.removeGrade(wrongId)).thenThrow(ServiceException.class);
         mockMvc.perform(delete("/rest/grades/4")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -127,7 +127,7 @@ class GradeJsonControllerTest {
         Grade grade = new Grade();
         grade.setId(legalId);
         grade.setValue(4);
-        when(service.removeGrade(2)).thenReturn(grade);
+        when(collegeFacade.removeGrade(2)).thenReturn(grade);
         mockMvc.perform(delete("/rest/grades/2")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

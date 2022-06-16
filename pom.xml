@@ -27,7 +27,6 @@
 		<sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
 		<sonar.language>java</sonar.language>
 		<java.version>11</java.version>
-		<jjwt.version>0.9.1</jjwt.version>
 		<maven-surefire-plugin.version>3.0.0-M6</maven-surefire-plugin.version>
 		<jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
 	</properties>
@@ -47,11 +46,6 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt</artifactId>
-			<version>${jjwt.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
@@ -63,6 +57,11 @@
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.6.9</version>
 		</dependency>
 	</dependencies>
 

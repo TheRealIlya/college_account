@@ -1,7 +1,7 @@
 package by.academy.jee.web.config;
 
 import by.academy.jee.web.filter.JwtRequestFilter;
-import by.academy.jee.web.service.auth.UserService;
+import by.academy.jee.service.auth.UserService;
 import by.academy.jee.web.util.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
-                .authorizeRequests().antMatchers("/rest/authenticate").permitAll()
+                .authorizeRequests().antMatchers("/rest/authenticate", "/swagger-ui/**"
+                , "/v3/**").permitAll()
                 .anyRequest().authenticated().and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()

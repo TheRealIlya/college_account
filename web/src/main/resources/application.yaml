@@ -20,4 +20,6 @@ logging:
   level:
     sql: debug
 
-jwt.secret: some_secret
+jwt:
+  secret: some_secret
+  validity: 600000

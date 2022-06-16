@@ -1,12 +1,12 @@
 package by.academy.jee.web.controller.rest;
 
-import by.academy.jee.dto.group.GroupDtoRequest;
+import by.academy.jee.web.dto.group.GroupDtoRequest;
 import by.academy.jee.exception.NotFoundException;
 import by.academy.jee.exception.ServiceException;
-import by.academy.jee.mapper.GroupDtoMapper;
+import by.academy.jee.web.mapper.GroupDtoMapper;
 import by.academy.jee.model.group.Group;
 import by.academy.jee.web.handler.ControllerExceptionHandler;
-import by.academy.jee.web.service.Service;
+import by.academy.jee.service.facade.CollegeFacade;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,13 +33,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class GroupJsonControllerTest {
 
     private static MockMvc mockMvc;
-    private static final Service service = mock(Service.class);
+    private static final CollegeFacade collegeFacade = mock(CollegeFacade.class);
     private static final GroupDtoMapper groupDtoMapper = Mappers.getMapper(GroupDtoMapper.class);
 
     @BeforeAll
     static void initMockMvc() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new GroupJsonController(service, groupDtoMapper))
+                .standaloneSetup(new GroupJsonController(collegeFacade, groupDtoMapper))
                 .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
     }
@@ -58,7 +58,7 @@ class GroupJsonControllerTest {
         group2.setId(2);
         group2.setTitle("group2");
         List<Group> groups = new ArrayList<>(List.of(group1, group2));
-        when(service.getAllGroups()).thenReturn(groups);
+        when(collegeFacade.getAllGroups()).thenReturn(groups);
         mockMvc.perform(get("/rest/groups")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -71,7 +71,7 @@ class GroupJsonControllerTest {
 
     @Test
     void getGroupWhenTitleIsNotValid() throws Exception {
-        when(service.getGroup("InvalidTitle")).thenThrow(NotFoundException.class);
+        when(collegeFacade.getGroup("InvalidTitle")).thenThrow(NotFoundException.class);
         mockMvc.perform(get("/rest/groups/InvalidTitle"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
@@ -82,7 +82,7 @@ class GroupJsonControllerTest {
         Group group = new Group();
         group.setId(1);
         group.setTitle("ValidTitle");
-        when(service.getGroup(group.getTitle())).thenReturn(group);
+        when(collegeFacade.getGroup(group.getTitle())).thenReturn(group);
         mockMvc.perform(get("/rest/groups/ValidTitle")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -97,7 +97,7 @@ class GroupJsonControllerTest {
         groupDtoRequest.setId(2);
         groupDtoRequest.setTitle("InvalidTitle");
         Group group = groupDtoMapper.mapDtoToModel(groupDtoRequest);
-        when(service.createGroup(group)).thenThrow(DuplicateKeyException.class);
+        when(collegeFacade.createGroup(group)).thenThrow(DuplicateKeyException.class);
         mockMvc.perform(post("/rest/groups")
                         .content(new ObjectMapper().writeValueAsString(groupDtoRequest))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -113,7 +113,7 @@ class GroupJsonControllerTest {
         groupDtoRequest.setId(2);
         groupDtoRequest.setTitle("ValidTitle");
         Group group = groupDtoMapper.mapDtoToModel(groupDtoRequest);
-        when(service.createGroup(group)).thenReturn(group);
+        when(collegeFacade.createGroup(group)).thenReturn(group);
         mockMvc.perform(post("/rest/groups")
                         .content(new ObjectMapper().writeValueAsString(groupDtoRequest))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -131,7 +131,7 @@ class GroupJsonControllerTest {
         groupDtoRequest.setId(2);
         groupDtoRequest.setTitle("Some title");
         Group group = groupDtoMapper.mapDtoToModel(groupDtoRequest);
-        when(service.updateGroup(group, 3)).thenThrow(ServiceException.class);
+        when(collegeFacade.updateGroup(group, 3)).thenThrow(ServiceException.class);
         mockMvc.perform(put("/rest/groups/3")
                         .content(new ObjectMapper().writeValueAsString(groupDtoRequest))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -146,7 +146,7 @@ class GroupJsonControllerTest {
         groupDtoRequest.setId(2);
         groupDtoRequest.setTitle("Some title");
         Group group = groupDtoMapper.mapDtoToModel(groupDtoRequest);
-        when(service.updateGroup(group, 2)).thenReturn(group);
+        when(collegeFacade.updateGroup(group, 2)).thenReturn(group);
         mockMvc.perform(put("/rest/groups/2")
                         .content(new ObjectMapper().writeValueAsString(groupDtoRequest))
                         .contentType(MediaType.APPLICATION_JSON)

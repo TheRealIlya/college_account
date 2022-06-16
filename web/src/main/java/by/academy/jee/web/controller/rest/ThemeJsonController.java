@@ -1,11 +1,12 @@
 package by.academy.jee.web.controller.rest;
 
 
-import by.academy.jee.dto.theme.ThemeDtoRequest;
-import by.academy.jee.dto.theme.ThemeDtoResponse;
-import by.academy.jee.mapper.ThemeDtoMapper;
+import by.academy.jee.web.dto.theme.ThemeDtoRequest;
+import by.academy.jee.web.dto.theme.ThemeDtoResponse;
+import by.academy.jee.web.mapper.ThemeDtoMapper;
 import by.academy.jee.model.theme.Theme;
-import by.academy.jee.web.service.Service;
+import by.academy.jee.service.facade.CollegeFacade;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,37 +28,38 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping(value = "/rest/themes")
+@SecurityRequirement(name = "jwtAuth")
 public class ThemeJsonController {
 
-    private final Service service;
+    private final CollegeFacade collegeFacade;
     private final ThemeDtoMapper themeDtoMapper;
 
     @GetMapping
     public List<ThemeDtoResponse> getAllThemes() {
-        return themeDtoMapper.mapModelListToDtoList(service.getAllThemes());
+        return themeDtoMapper.mapModelListToDtoList(collegeFacade.getAllThemes());
     }
 
     @GetMapping(value = "/{title}")
     public ResponseEntity<ThemeDtoResponse> getTheme(@PathVariable @NotNull String title) {
-        return ResponseEntity.ok(themeDtoMapper.mapModelToDto(service.getTheme(title)));
+        return ResponseEntity.ok(themeDtoMapper.mapModelToDto(collegeFacade.getTheme(title)));
     }
 
     @PostMapping
     public ResponseEntity<ThemeDtoResponse> createTheme(@Valid @RequestBody ThemeDtoRequest themeDtoRequest) {
         Theme theme = themeDtoMapper.mapDtoToModel(themeDtoRequest);
-        return ResponseEntity.ok(themeDtoMapper.mapModelToDto(service.createTheme(theme)));
+        return ResponseEntity.ok(themeDtoMapper.mapModelToDto(collegeFacade.createTheme(theme)));
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<ThemeDtoResponse> updateTheme(@Valid @RequestBody ThemeDtoRequest themeDtoRequest,
                                                         @PathVariable @Min(1) int id) {
         Theme theme = themeDtoMapper.mapDtoToModel(themeDtoRequest);
-        return ResponseEntity.ok(themeDtoMapper.mapModelToDto(service.updateTheme(theme, id)));
+        return ResponseEntity.ok(themeDtoMapper.mapModelToDto(collegeFacade.updateTheme(theme, id)));
     }
 
     @DeleteMapping(value = "/{title}")
     public ResponseEntity<ThemeDtoResponse> deleteTheme(@PathVariable @NotNull String title) {
-        Theme theme = service.getTheme(title);
-        return ResponseEntity.ok(themeDtoMapper.mapModelToDto(service.removeTheme(theme)));
+        Theme theme = collegeFacade.removeTheme(title);
+        return ResponseEntity.ok(themeDtoMapper.mapModelToDto(theme));
     }
 }

@@ -1,10 +1,11 @@
 package by.academy.jee.web.controller.rest;
 
-import by.academy.jee.dto.grade.GradeDtoRequest;
-import by.academy.jee.dto.grade.GradeDtoResponse;
-import by.academy.jee.mapper.GradeDtoMapper;
+import by.academy.jee.web.dto.grade.GradeDtoRequest;
+import by.academy.jee.web.dto.grade.GradeDtoResponse;
+import by.academy.jee.web.mapper.GradeDtoMapper;
 import by.academy.jee.model.grade.Grade;
-import by.academy.jee.web.service.Service;
+import by.academy.jee.service.facade.CollegeFacade;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -25,31 +26,32 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping(value = "/rest/grades")
+@SecurityRequirement(name = "jwtAuth")
 public class GradeJsonController {
 
-    private final Service service;
+    private final CollegeFacade collegeFacade;
     private final GradeDtoMapper gradeDtoMapper;
 
     @GetMapping
     public List<GradeDtoResponse> getAllGrades() {
-        return gradeDtoMapper.mapModelListToDtoList(service.getAllGrades());
+        return gradeDtoMapper.mapModelListToDtoList(collegeFacade.getAllGrades());
     }
 
     @PostMapping
     public ResponseEntity<GradeDtoResponse> createGrade(@Valid @RequestBody GradeDtoRequest gradeDtoRequest) {
         Grade grade = gradeDtoMapper.mapDtoToModel(gradeDtoRequest);
-        return ResponseEntity.ok(gradeDtoMapper.mapModelToDto(service.createGrade(grade)));
+        return ResponseEntity.ok(gradeDtoMapper.mapModelToDto(collegeFacade.createGrade(grade)));
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<GradeDtoResponse> updateGrade(@Valid @RequestBody GradeDtoRequest gradeDtoRequest,
                                                         @PathVariable @Min(1) int id) {
         Grade grade = gradeDtoMapper.mapDtoToModel(gradeDtoRequest);
-        return ResponseEntity.ok(gradeDtoMapper.mapModelToDto(service.updateGrade(grade, id)));
+        return ResponseEntity.ok(gradeDtoMapper.mapModelToDto(collegeFacade.updateGrade(grade, id)));
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<GradeDtoResponse> deleteGrade(@PathVariable @Min(1) int id) {
-        return ResponseEntity.ok(gradeDtoMapper.mapModelToDto(service.removeGrade(id)));
+        return ResponseEntity.ok(gradeDtoMapper.mapModelToDto(collegeFacade.removeGrade(id)));
     }
 }

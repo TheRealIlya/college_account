@@ -2,7 +2,7 @@ package by.academy.jee.web.controller.rest;
 
 import by.academy.jee.model.auth.jwt.JwtRequest;
 import by.academy.jee.model.auth.jwt.JwtResponse;
-import by.academy.jee.web.service.auth.UserService;
+import by.academy.jee.service.auth.UserService;
 import by.academy.jee.web.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
