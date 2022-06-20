@@ -6,6 +6,7 @@ import by.academy.jee.web.dto.theme.ThemeDtoResponse;
 import by.academy.jee.web.mapper.ThemeDtoMapper;
 import by.academy.jee.model.theme.Theme;
 import by.academy.jee.service.facade.CollegeFacade;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,17 +41,21 @@ public class ThemeJsonController {
     }
 
     @GetMapping(value = "/{title}")
+    @Operation(summary = "Get theme by title")
     public ResponseEntity<ThemeDtoResponse> getTheme(@PathVariable @NotNull String title) {
         return ResponseEntity.ok(themeDtoMapper.mapModelToDto(collegeFacade.getTheme(title)));
     }
 
     @PostMapping
+    @Operation(summary = "Create theme",
+            description = "Accept theme in request body, cause 400 if input is invalid or title is already exist")
     public ResponseEntity<ThemeDtoResponse> createTheme(@Valid @RequestBody ThemeDtoRequest themeDtoRequest) {
         Theme theme = themeDtoMapper.mapDtoToModel(themeDtoRequest);
         return ResponseEntity.ok(themeDtoMapper.mapModelToDto(collegeFacade.createTheme(theme)));
     }
 
     @PutMapping(value = "/{id}")
+    @Operation(summary = "Update theme", description = "Id in path must be equal to id in request body")
     public ResponseEntity<ThemeDtoResponse> updateTheme(@Valid @RequestBody ThemeDtoRequest themeDtoRequest,
                                                         @PathVariable @Min(1) int id) {
         Theme theme = themeDtoMapper.mapDtoToModel(themeDtoRequest);
@@ -58,6 +63,7 @@ public class ThemeJsonController {
     }
 
     @DeleteMapping(value = "/{title}")
+    @Operation(summary = "Delete theme", description = "Includes deletion of theme's grades")
     public ResponseEntity<ThemeDtoResponse> deleteTheme(@PathVariable @NotNull String title) {
         Theme theme = collegeFacade.removeTheme(title);
         return ResponseEntity.ok(themeDtoMapper.mapModelToDto(theme));

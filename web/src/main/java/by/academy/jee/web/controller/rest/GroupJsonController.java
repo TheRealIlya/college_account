@@ -5,6 +5,7 @@ import by.academy.jee.web.dto.group.GroupDtoResponse;
 import by.academy.jee.web.mapper.GroupDtoMapper;
 import by.academy.jee.model.group.Group;
 import by.academy.jee.service.facade.CollegeFacade;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -39,17 +40,21 @@ public class GroupJsonController {
     }
 
     @GetMapping(value = "/{title}")
+    @Operation(summary = "Get group by title")
     public ResponseEntity<GroupDtoResponse> getGroup(@PathVariable @NotNull String title) {
         return ResponseEntity.ok(groupDtoMapper.mapModelToDto(collegeFacade.getGroup(title)));
     }
 
     @PostMapping
+    @Operation(summary = "Create group",
+            description = "Accept group in request body, cause 400 if input is invalid or title is already exist")
     public ResponseEntity<GroupDtoResponse> createGroup(@Valid @RequestBody GroupDtoRequest groupDtoRequest) {
         Group group = groupDtoMapper.mapDtoToModel(groupDtoRequest);
         return ResponseEntity.ok(groupDtoMapper.mapModelToDto(collegeFacade.createGroup(group)));
     }
 
     @PutMapping(value = "/{id}")
+    @Operation(summary = "Update group", description = "Id in path must be equal to id in request body")
     public ResponseEntity<GroupDtoResponse> updateGroup(@Valid @RequestBody GroupDtoRequest groupDtoRequest,
                                                         @PathVariable @Min(1) int id) {
         Group group = groupDtoMapper.mapDtoToModel(groupDtoRequest);
@@ -57,6 +62,7 @@ public class GroupJsonController {
     }
 
     @DeleteMapping(value = "/{title}")
+    @Operation(summary = "Delete group", description = "Includes deletion of group's grades")
     public ResponseEntity<GroupDtoResponse> deleteGroup(@PathVariable @NotNull String title) {
         Group group = collegeFacade.removeGroupByTitle(title);
         return ResponseEntity.ok(groupDtoMapper.mapModelToDto(group));

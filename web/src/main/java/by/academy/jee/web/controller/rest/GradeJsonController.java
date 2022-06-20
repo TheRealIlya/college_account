@@ -5,6 +5,7 @@ import by.academy.jee.web.dto.grade.GradeDtoResponse;
 import by.academy.jee.web.mapper.GradeDtoMapper;
 import by.academy.jee.model.grade.Grade;
 import by.academy.jee.service.facade.CollegeFacade;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -38,12 +39,14 @@ public class GradeJsonController {
     }
 
     @PostMapping
+    @Operation(summary = "Create grade")
     public ResponseEntity<GradeDtoResponse> createGrade(@Valid @RequestBody GradeDtoRequest gradeDtoRequest) {
         Grade grade = gradeDtoMapper.mapDtoToModel(gradeDtoRequest);
         return ResponseEntity.ok(gradeDtoMapper.mapModelToDto(collegeFacade.createGrade(grade)));
     }
 
     @PutMapping(value = "/{id}")
+    @Operation(summary = "Update grade", description = "Id in path must be equal to id in request body")
     public ResponseEntity<GradeDtoResponse> updateGrade(@Valid @RequestBody GradeDtoRequest gradeDtoRequest,
                                                         @PathVariable @Min(1) int id) {
         Grade grade = gradeDtoMapper.mapDtoToModel(gradeDtoRequest);
@@ -51,6 +54,7 @@ public class GradeJsonController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @Operation(summary = "Delete grade")
     public ResponseEntity<GradeDtoResponse> deleteGrade(@PathVariable @Min(1) int id) {
         return ResponseEntity.ok(gradeDtoMapper.mapModelToDto(collegeFacade.removeGrade(id)));
     }

@@ -15,7 +15,7 @@ import javax.validation.ConstraintViolationException;
 public class ControllerExceptionHandler {
 
     @ExceptionHandler({ConstraintViolationException.class, DataAccessException.class, ServiceException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleBadRequestExceptions(Exception exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }

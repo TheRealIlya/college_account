@@ -4,6 +4,7 @@ import by.academy.jee.model.auth.jwt.JwtRequest;
 import by.academy.jee.model.auth.jwt.JwtResponse;
 import by.academy.jee.service.auth.UserService;
 import by.academy.jee.web.util.JwtTokenUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,7 @@ public class JwtAuthenticationController {
     private final UserService userService;
 
     @PostMapping(value = "/rest/authenticate")
+    @Operation(summary = "Entry point to application, provides JWT")
     public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody JwtRequest jwtRequest) {
         authenticate(jwtRequest.getLogin(), jwtRequest.getPassword());
         final UserDetails userDetails = userService.loadUserByUsername(jwtRequest.getLogin());
