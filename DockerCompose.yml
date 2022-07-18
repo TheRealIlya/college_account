@@ -21,7 +21,7 @@ services:
     container_name: postgres-db
     image: postgres
     ports:
-      - "5432:8079"
+      - "5432:5432"
     environment:
       POSTGRES_DB: "academy"
       POSTGRES_USER: "ilya"
