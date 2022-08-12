@@ -114,4 +114,5 @@ public class CollegeFacade {
                 .forEach(themes -> themes.remove(theme));
         return themeService.removeTheme(theme);
     }
+
 }
