@@ -1,7 +1,7 @@
 version: '3.0'
 services:
-  app:
-    container_name: college_app
+  auth:
+    container_name: college_auth
     build:
       context: .
       dockerfile: web/Dockerfile
@@ -54,6 +54,29 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  core:
+    container_name: college_core
+    build:
+      context: ../college_core
+      dockerfile: Dockerfile
+    ports:
+      - "8060:8060"
+    environment:
+      MONGODB_HOST: mongodb
+      MONGODB_PORT: 27017
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data_container:/data/db
 
   logger:
     container_name: college_logger
@@ -115,5 +138,6 @@ services:
 
 volumes:
   postgresql-data:
+  mongodb_data_container:
   elasticsearch-data-volume:
     driver: local

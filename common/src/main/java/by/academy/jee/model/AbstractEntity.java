@@ -13,6 +13,7 @@ import java.util.Objects;
 @Setter
 @MappedSuperclass
 public abstract class AbstractEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -29,4 +30,5 @@ public abstract class AbstractEntity {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }

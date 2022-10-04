@@ -1,10 +1,8 @@
 package by.academy.jee.web.controller.rest;
 
-import by.academy.jee.model.person.Person;
-import by.academy.jee.service.facade.CollegeFacade;
 import by.academy.jee.web.dto.person.PersonDtoRequest;
 import by.academy.jee.web.dto.person.PersonDtoResponse;
-import by.academy.jee.web.mapper.PersonDtoMapper;
+import by.academy.jee.web.facade.PersonFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,41 +31,37 @@ import java.util.List;
 @Tag(name = "PersonController", description = "CRUD for persons")
 public class PersonJsonController {
 
-    private final CollegeFacade collegeFacade;
-    private final PersonDtoMapper personDtoMapper;
+    private final PersonFacade personFacade;
 
     @GetMapping
     public List<PersonDtoResponse> getAllPersons() {
-        return personDtoMapper.mapModelListToDtoList(collegeFacade.getAllPersons());
+        return personFacade.getAllPersons();
     }
 
     @GetMapping(value = "/{login}")
     @Operation(summary = "Get person by login")
     public ResponseEntity<PersonDtoResponse> getPerson(@PathVariable @NotNull String login) {
-        Person person = collegeFacade.getPerson(login);
-        return ResponseEntity.ok(personDtoMapper.mapModelToDto(person));
+        return ResponseEntity.ok(personFacade.getPerson(login));
     }
 
     @PostMapping
     @Operation(summary = "Create person",
             description = "Accept person in request body, cause 400 if input is invalid or login is already exist")
     public ResponseEntity<PersonDtoResponse> createPerson(@Valid @RequestBody PersonDtoRequest personDtoRequest) {
-        Person person = personDtoMapper.mapDtoToModel(personDtoRequest);
-        return ResponseEntity.ok(personDtoMapper.mapModelToDto(collegeFacade.createPerson(person)));
+        return ResponseEntity.ok(personFacade.createPerson(personDtoRequest));
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update person", description = "Id in path must be equal to id in request body")
     public ResponseEntity<PersonDtoResponse> updatePerson(@Valid @RequestBody PersonDtoRequest personDtoRequest,
                                                           @PathVariable @Min(1) int id) {
-        Person person = personDtoMapper.mapDtoToModel(personDtoRequest);
-        return ResponseEntity.ok(personDtoMapper.mapModelToDto(collegeFacade.updatePerson(person, id)));
+        return ResponseEntity.ok(personFacade.updatePerson(personDtoRequest, id));
     }
 
     @DeleteMapping(value = "/{login}")
     @Operation(summary = "Delete person")
     public ResponseEntity<PersonDtoResponse> deletePerson(@PathVariable @NotNull String login) {
-        Person person = collegeFacade.getPerson(login);
-        return ResponseEntity.ok(personDtoMapper.mapModelToDto(collegeFacade.removePerson(person)));
+        return ResponseEntity.ok(personFacade.deletePerson(login));
     }
+
 }

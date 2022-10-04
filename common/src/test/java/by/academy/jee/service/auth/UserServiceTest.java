@@ -3,7 +3,7 @@ package by.academy.jee.service.auth;
 import by.academy.jee.exception.NotFoundException;
 import by.academy.jee.model.auth.UserPrincipal;
 import by.academy.jee.model.person.Admin;
-import by.academy.jee.service.facade.CollegeFacade;
+import by.academy.jee.service.PersonService;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,8 +15,8 @@ import static org.mockito.Mockito.when;
 
 class UserServiceTest {
 
-    private final CollegeFacade collegeFacade = mock(CollegeFacade.class);
-    private final UserService userService = new UserService(collegeFacade);
+    private final PersonService personService = mock(PersonService.class);
+    private final UserService userService = new UserService(personService);
 
     @Test
     void loadUserByUsernameWhenUsernameIsValid() {
@@ -36,7 +36,7 @@ class UserServiceTest {
     }
 
     private UserDetails loadUserByUsername(String username) {
-        when(collegeFacade.getPerson(username)).then(invocation -> {
+        when(personService.getPerson(username)).then(invocation -> {
             if ("Valid login".equals(username)) {
                 Admin admin = new Admin();
                 admin.setLogin(username);
@@ -47,4 +47,5 @@ class UserServiceTest {
         });
         return userService.loadUserByUsername(username);
     }
+
 }

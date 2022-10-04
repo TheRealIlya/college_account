@@ -1,21 +1,20 @@
 package by.academy.jee.web.dto.grade;
 
-import by.academy.jee.web.dto.group.GroupDtoRequest;
-import by.academy.jee.web.dto.person.PersonDtoRequest;
-import by.academy.jee.web.dto.theme.ThemeDtoRequest;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Min;
 
 @Getter
 @Setter
 public class GradeDtoRequest {
 
-    private Integer id;
-    @NotNull
+    private String id;
+
+    @Min(1)
     private int value;
-    private PersonDtoRequest student;
-    private GroupDtoRequest group;
-    private ThemeDtoRequest theme;
+    private String studentLogin;
+    private String groupTitle;
+    private String themeTitle;
+
 }

@@ -3,10 +3,13 @@ package by.academy.jee.web.dto.theme;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class ThemeDtoResponse {
 
-    private Integer id;
     private String title;
+    private List<String> groupTitles;
+
 }

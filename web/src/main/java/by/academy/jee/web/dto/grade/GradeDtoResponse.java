@@ -7,6 +7,9 @@ import lombok.Setter;
 @Setter
 public class GradeDtoResponse {
 
-    private Integer id;
     private int value;
+    private int studentId;
+    private String groupTitle;
+    private String themeTitle;
+
 }

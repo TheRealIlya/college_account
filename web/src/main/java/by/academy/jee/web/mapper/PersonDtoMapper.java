@@ -1,11 +1,11 @@
 package by.academy.jee.web.mapper;
 
-import by.academy.jee.web.dto.person.PersonDtoRequest;
-import by.academy.jee.web.dto.person.PersonDtoResponse;
 import by.academy.jee.model.person.Admin;
 import by.academy.jee.model.person.Person;
 import by.academy.jee.model.person.Student;
 import by.academy.jee.model.person.Teacher;
+import by.academy.jee.web.dto.person.PersonDtoRequest;
+import by.academy.jee.web.dto.person.PersonDtoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -6,10 +6,13 @@ import by.academy.jee.exception.ServiceException;
 import by.academy.jee.model.person.Admin;
 import by.academy.jee.model.person.Person;
 import by.academy.jee.model.person.Student;
+import by.academy.jee.model.person.Teacher;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class PersonServiceTest {
 
@@ -72,6 +76,13 @@ class PersonServiceTest {
     @Test
     void updatePersonWhenPersonIsNull() {
         assertThrows(ServiceException.class, () -> personService.updatePerson(null, 4));
+    }
+
+    @Test
+    void getAllPersonsTest() {
+        Mockito.when(personDao.findAll()).thenReturn(List.of(new Admin(), new Teacher(), new Student()));
+
+        assertThat(personService.getAllPersons()).hasSize(3);
     }
 
     private Person getPerson(String login) {
