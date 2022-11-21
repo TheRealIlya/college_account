@@ -15,7 +15,7 @@ technologies
 - Full application consists of 3 microservices:
 1. **College Auth** (this application) - gateway, which provides authentication, authorization and entry points to logic of the whole system
 2. **College Core** - application which provides logic for Theme, Group and Grade entities
-3. **College Logger** - application which reformats and stores logs
+3. **College Logger** - application which reformats, stores and gives opportunity to view logs
 
 - Application has **Jenkinsfile** which is set up to run tests, install the app and provide SonarQube check
 
@@ -31,6 +31,7 @@ Used technologies
 - **Spring Security** - used in *Auth* microservice
 - **JWT** - used in *Auth* microservice
 - **Kafka** - used in *Auth and Logger* microservices for logs transferring
+- **Feign Client** - used in *Auth* microservice to grant access to *Core* app functionality
 - **Elastic stack (Elasticsearch, Logstash, Kibana)** - used in *Logger* microservice for storing, reformatting and browsing logs
 - **Swagger** - used in *Auth and Core* microservices to provide endpoints documentation
 - **Liquibase** - used in *Auth* microservice for PostgreSQL migration
