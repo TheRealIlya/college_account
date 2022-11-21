@@ -24,10 +24,14 @@ logging:
 
 jwt:
   secret: some_secret
-  validity: 600000
+  validity: 600000000
 
 kafka:
   producer.id: 1
   topic:
     request.log: request_logs
     token.grant.log: token_grant_logs
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui

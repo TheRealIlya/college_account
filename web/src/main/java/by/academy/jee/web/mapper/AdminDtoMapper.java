@@ -1,8 +1,8 @@
 package by.academy.jee.web.mapper;
 
+import by.academy.jee.model.person.Admin;
 import by.academy.jee.web.dto.person.PersonDtoRequest;
 import by.academy.jee.web.dto.person.admin.AdminDtoResponse;
-import by.academy.jee.model.person.Admin;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

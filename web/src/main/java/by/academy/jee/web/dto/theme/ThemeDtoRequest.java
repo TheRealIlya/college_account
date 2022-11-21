@@ -1,7 +1,5 @@
 package by.academy.jee.web.dto.theme;
 
-import by.academy.jee.web.dto.grade.GradeDtoRequest;
-import by.academy.jee.web.dto.group.GroupDtoRequest;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,9 +10,10 @@ import java.util.List;
 @Setter
 public class ThemeDtoRequest {
 
-    private Integer id;
+    private String id;
+
     @NotNull
     private String title;
-    private List<GroupDtoRequest> groups;
-    private List<GradeDtoRequest> grades;
+    private List<String> groupTitles;
+
 }

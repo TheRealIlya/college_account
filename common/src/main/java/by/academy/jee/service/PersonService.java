@@ -46,6 +46,14 @@ public class PersonService {
         return personDao.findAll();
     }
 
+    public Person getPersonById(int id) {
+        return personDao.findById(id).orElseThrow(NotFoundException::new);
+    }
+
+    public List<Person> getPersonsByIdList(List<Integer> idList) {
+        return personDao.findAllById(idList);
+    }
+
     private void encodePasswordForPerson(Person person) {
         person.setPassword(passwordEncoder.encode(person.getPassword()));
     }

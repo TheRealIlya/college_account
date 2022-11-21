@@ -6,6 +6,7 @@ import by.academy.jee.service.auth.UserService;
 import by.academy.jee.web.kafka.KafkaProducerService;
 import by.academy.jee.web.util.JwtTokenUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,11 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
+@Tag(name = "Authentication", description = "auth workflow")
 public class JwtAuthenticationController {
 
     private static final String TOKEN_GRANTED_PAYLOAD = "type:auth User \"%s\" successfully got token";
     private static final String INVALID_CREDENTIALS_PAYLOAD =
             "type:auth Attempt to get token with wrong credentials, user \"%s\"";
+
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final UserService userService;

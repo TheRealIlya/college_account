@@ -28,6 +28,7 @@ public abstract class Person extends AbstractEntity {
     private String password;
     private String name;
     private int age;
+
     @Column(name = "role_id", insertable = false, updatable = false)
     private Role role;
 
@@ -40,4 +41,5 @@ public abstract class Person extends AbstractEntity {
     public int hashCode() {
         return super.hashCode();
     }
+
 }
