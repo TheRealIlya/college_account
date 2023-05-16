@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(value = "theme-service", url = "http://core:8060/themes")
+@FeignClient(value = "theme-service", url = "http://college-core-service:8060/themes")
 public interface ThemeFeignClient {
 
     @GetMapping

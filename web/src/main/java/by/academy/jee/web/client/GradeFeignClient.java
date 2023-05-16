@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(value = "grade-service", url = "http://core:8060/grades")
+@FeignClient(value = "grade-service", url = "http://college-core-service:8060/grades")
 public interface GradeFeignClient {
 
     @GetMapping

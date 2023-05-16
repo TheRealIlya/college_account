@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(value = "group-service", url = "http://core:8060/groups")
+@FeignClient(value = "group-service", url = "http://college-core-service:8060/groups")
 public interface GroupFeignClient {
 
     @GetMapping
