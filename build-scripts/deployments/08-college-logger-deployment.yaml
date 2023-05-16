@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: college-logger-config
+  namespace: college-demo
+data:
+  kafka_server: "kafka-service:9092"
+  logstash_server: "logstash-service:5000"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: college-logger-deployment
+  namespace: college-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: college-logger
+  template:
+    metadata:
+      labels:
+        name: college-logger
+    spec:
+      containers:
+        - name: college-logger-container
+          image: college-logger:kubernetes
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8070
+          env:
+            - name: KAFKA_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: college-logger-config
+                  key: kafka_server
+            - name: LOGSTASH_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: college-logger-config
+                  key: logstash_server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: college-logger-service
+  namespace: college-demo
+spec:
+  selector:
+    name: college-logger
+  ports:
+    - port: 8070
+      targetPort: 8070

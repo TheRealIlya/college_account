@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: college-auth-config
+  namespace: college-demo
+data:
+  kafka_server: "kafka-service:9092"
+  spring_datasource_url: "jdbc:postgresql://postgres-service:5432/academy"
+  spring_datasource_username: "ilya"
+  spring_datasource_password: "postgres"
+  spring_jpa_hibernate_ddl_auto: "none"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: college-auth-deployment
+  namespace: college-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: college-auth
+  template:
+    metadata:
+      labels:
+        name: college-auth
+    spec:
+      containers:
+        - name: college-auth-container
+          image: college-auth:kubernetes
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: KAFKA_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: college-auth-config
+                  key: kafka_server
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: college-auth-config
+                  key: spring_datasource_url
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: college-auth-config
+                  key: spring_datasource_username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: college-auth-config
+                  key: spring_datasource_password
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              valueFrom:
+                configMapKeyRef:
+                  name: college-auth-config
+                  key: spring_jpa_hibernate_ddl_auto
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: college-auth-service
+  namespace: college-demo
+spec:
+  selector:
+    name: college-auth
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 8080

@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elasticsearch-config
+  namespace: college-demo
+data:
+  xpack_security_enabled: "false"
+  discovery_type: "single-node"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch-deployment
+  namespace: college-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: elasticsearch
+  template:
+    metadata:
+      labels:
+        name: elasticsearch
+    spec:
+      containers:
+        - name: elasticsearch-container
+          image: elasticsearch:8.4.1
+          ports:
+            - containerPort: 9200
+          env:
+            - name: xpack.security.enabled
+              valueFrom:
+                configMapKeyRef:
+                  name: elasticsearch-config
+                  key: xpack_security_enabled
+            - name: discovery.type
+              valueFrom:
+                configMapKeyRef:
+                  name: elasticsearch-config
+                  key: discovery_type
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch-service
+  namespace: college-demo
+spec:
+  selector:
+    name: elasticsearch
+  ports:
+    - port: 9200
+      targetPort: 9200

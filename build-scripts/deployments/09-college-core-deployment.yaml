@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: college-core-config
+  namespace: college-demo
+data:
+  mongodb_host: "mongo-service"
+  mongodb_port: "27017"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: college-core-deployment
+  namespace: college-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: college-core
+  template:
+    metadata:
+      labels:
+        name: college-core
+    spec:
+      containers:
+        - name: college-core-container
+          image: college-core:kubernetes
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8060
+          env:
+            - name: MONGODB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: college-core-config
+                  key: mongodb_host
+            - name: MONGODB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: college-core-config
+                  key: mongodb_port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: college-core-service
+  namespace: college-demo
+spec:
+  selector:
+    name: college-core
+  ports:
+    - port: 8060
+      targetPort: 8060
