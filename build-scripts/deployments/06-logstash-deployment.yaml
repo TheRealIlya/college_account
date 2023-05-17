@@ -1,3 +1,40 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+  namespace: college-demo
+data:
+  logstash.conf: |
+    input {
+      tcp {
+        port => 5000
+        codec => json_lines
+      }
+    }
+
+    filter {
+      if "type:auth" in [message] {
+        grok {
+          match => { "message" => "type:%{WORD:log_type} %{GREEDYDATA:payload}" }
+        }
+      }
+
+      if "type:url" in [message] {
+        grok {
+          match => { "message" => "type:%{WORD:log_type} %{WORD:method} %{GREEDYDATA:url}" }
+        }
+      }
+
+      mutate { remove_field => [ "message" ] }
+    }
+
+    output {
+      elasticsearch {
+        hosts => "elasticsearch-service:9200"
+        index => "logstash"
+      }
+    }
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,10 +53,17 @@ spec:
       containers:
         - name: logstash-container
           image: logstash:8.4.1
+          volumeMounts:
+            - name: conf-volume
+              mountPath: /etc/logstash/conf.d
           command: ["logstash"]
           args: ["-f", "/etc/logstash/conf.d/logstash.conf"]
           ports:
             - containerPort: 5000
+      volumes:
+        - name: conf-volume
+          configMap:
+            name: logstash-config
 ---
 apiVersion: v1
 kind: Service
