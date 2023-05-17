@@ -60,6 +60,15 @@ spec:
           args: ["-f", "/etc/logstash/conf.d/logstash.conf"]
           ports:
             - containerPort: 5000
+            - containerPort: 9600
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 9600
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
       volumes:
         - name: conf-volume
           configMap:
@@ -74,5 +83,9 @@ spec:
   selector:
     name: logstash
   ports:
-    - port: 5000
+    - name: first
+      port: 5000
       targetPort: 5000
+    - name: second
+      port: 9600
+      targetPort: 9600

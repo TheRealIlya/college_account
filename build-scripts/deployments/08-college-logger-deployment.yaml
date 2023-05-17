@@ -22,6 +22,10 @@ spec:
       labels:
         name: college-logger
     spec:
+      initContainers:
+        - name: check-logstash-availability
+          image: alpine/curl
+          command: ['sh', '-c', 'until curl -q -f -s -o /dev/null logstash-service:9600; do sleep 5; done']
       containers:
         - name: college-logger-container
           image: college-logger:kubernetes
