@@ -19,8 +19,3 @@ build_basic . college-logger
 echo "Building core service image"
 cd ../college_core
 build_basic . college-core
-
-#echo "Building Docker images"
-#build_basic ./config-server/target/config-server-${APP_VERSION}.jar application/config-server
-#build_basic ./discovery-service/target/discovery-service-${APP_VERSION}.jar application/discovery-service
-#build_basic ./examinator/target/examinator-${APP_VERSION}.jar application/examinator

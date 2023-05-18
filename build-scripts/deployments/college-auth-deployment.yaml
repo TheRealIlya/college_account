@@ -57,6 +57,11 @@ spec:
                 configMapKeyRef:
                   name: college-auth-config
                   key: spring_jpa_hibernate_ddl_auto
+          resources:
+            limits:
+              cpu: 1000m
+            requests:
+              cpu: 500m
 ---
 apiVersion: v1
 kind: Service
@@ -70,3 +75,26 @@ spec:
   ports:
     - port: 8080
       targetPort: 8080
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: college-auth-autoscaler
+  namespace: college-demo
+spec:
+  minReplicas: 1
+  maxReplicas: 3
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: college-auth-deployment
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 10

@@ -1,12 +1,13 @@
 #!/bin/bash
 
-kubectl apply -f ../deployments/01-elasticsearch-deployment.yaml
-kubectl apply -f ../deployments/02-mongo-deployment.yaml
-kubectl apply -f ../deployments/03-postgres-deployment.yaml
-kubectl apply -f ../deployments/04-zookeeper-deployment.yaml
-kubectl apply -f ../deployments/05-kafka-deployment.yaml
-kubectl apply -f ../deployments/06-logstash-deployment.yaml
-kubectl apply -f ../deployments/07-kibana-deployment.yaml
-kubectl apply -f ../deployments/08-college-logger-deployment.yaml
-kubectl apply -f ../deployments/09-college-core-deployment.yaml
-kubectl apply -f ../deployments/10-college-auth-deployment.yaml
+kubectl apply -f ../deployments/components.yml
+kubectl apply -f ../deployments/elasticsearch-deployment.yaml
+kubectl apply -f ../deployments/mongo-deployment.yaml
+kubectl apply -f ../deployments/postgres-deployment.yaml
+kubectl apply -f ../deployments/zookeeper-deployment.yaml
+kubectl apply -f ../deployments/kafka-deployment.yaml
+kubectl apply -f ../deployments/logstash-deployment.yaml
+kubectl apply -f ../deployments/kibana-deployment.yaml
+kubectl apply -f ../deployments/college-logger-deployment.yaml
+kubectl apply -f ../deployments/college-core-deployment.yaml
+kubectl apply -f ../deployments/college-auth-deployment.yaml
